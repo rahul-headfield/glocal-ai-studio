@@ -20,7 +20,7 @@ export const CONTACT_EMAIL = 'info@glocalaistudio.com'
 export const CALENDLY_BASE = ''
 
 /** Where the studio is based (shown in the footer and on the contact page). */
-export const LOCATION = 'Wilmington, Delaware · India'
+export const LOCATION = 'Wilmington, Delaware, USA'
 
 /** Brand assets under /public. */
 export const LOGO = '/glocal-logo.png'

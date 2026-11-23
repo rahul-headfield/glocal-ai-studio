@@ -83,7 +83,7 @@ Everything brand-specific lives in `src/data/site.js`:
 - `CONTACT_EMAIL` — currently `info@glocalaistudio.com`. Confirm this mailbox exists before launch.
 - `CALENDLY_BASE` — empty, so every "Schedule a Call" CTA opens a pre-filled email. Set a booking URL to
   switch the Calendly popup on.
-- `SOCIALS` and `LOCATION` — the Glocal RPO LinkedIn/Instagram accounts and "Wilmington, Delaware · India".
+- `SOCIALS` and `LOCATION` — the Glocal RPO LinkedIn/Instagram accounts and "Wilmington, Delaware, USA".
 
 ## Production notes
 
