@@ -91,3 +91,6 @@ public/posters/wildstone-ultra-sensual.webp
 public/posters/wildstone-ultra-sensual-hero.webp
 public/posters/zoho.webp
 public/posters/zoho-hero.webp
+
+.vercel
+.env*
