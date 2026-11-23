@@ -22,10 +22,6 @@ const TEXT_LIGHT = [242, 228, 194]
 const LINES = ['An AI studio built for the GenAI era,', 'reimagining how visionary artists create films,', 'series, and new forms of storytelling.']
 const WORDS = LINES.flatMap((line, li) => line.split(' ').map((word) => ({ word, line: li })))
 
-/** Scroll progress at which the gold line is fully drawn. */
-const LINE_DRAWN = 0.9
-/** Extra scroll (px, roughly 1 cm) past the fully drawn line before it fades out. */
-const LINE_FADE_AFTER = 40
 
 const lerp = (a, b, t) => a + (b - a) * t
 const clamp01 = (v) => Math.max(0, Math.min(1, v))
@@ -51,7 +47,6 @@ export default function ManifestoSection() {
   const sectionRef = useRef(null)
   const stickyRef = useRef(null)
   const maskRef = useRef(null)
-  const lineRef = useRef(null)
   const bgRef = useRef(null)
   const textRef = useRef(null)
   const wordRefs = useRef([])
@@ -63,10 +58,9 @@ export default function ManifestoSection() {
       const section = sectionRef.current
       const sticky = stickyRef.current
       const mask = maskRef.current
-      const line = lineRef.current
       const bg = bgRef.current
       const text = textRef.current
-      if (!section || !sticky || !mask || !line || !bg || !text) return
+      if (!section || !sticky || !mask || !bg || !text) return
       // The sticky frame's height (100vh) stays fixed while a phone's address bar
       // shows and hides, unlike window.innerHeight, so progress never jumps mid-scroll.
       const vh = sticky.offsetHeight
@@ -104,13 +98,6 @@ export default function ManifestoSection() {
         text.style.color = color
         lastColor = color
       }
-
-      // The gold line draws down beneath the sentence (scaleY avoids a layout per frame).
-      line.style.height = `${Math.min(160, vh * 0.18)}px`
-      line.style.transform = `scaleY(${range(0.62, LINE_DRAWN, progress)})`
-      // Once it is fully drawn, a little more scrolling fades it out on a timed transition.
-      const drawnAt = LINE_DRAWN * (section.offsetHeight - vh)
-      line.style.opacity = -rect.top > drawnAt + LINE_FADE_AFTER ? '0' : '1'
     }
     // Coalesce scroll events into one update per frame.
     let frame = 0
@@ -196,9 +183,6 @@ export default function ManifestoSection() {
               </span>
             ))}
           </p>
-
-          <div ref={lineRef} style={{ width: '1.5px', height: '0px', transform: 'scaleY(0)', transformOrigin: 'top', transition: 'opacity 0.6s ease', marginTop: 'clamp(20px, 3.5vh, 40px)', background: 'linear-gradient(to bottom, rgba(220,171,89,0.2), #DCAB59)' }} />
-
         </div>
 
         <div
