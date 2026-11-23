@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import { HOME_WORK } from '../../data/projects'
 import useIsMobile from '../../lib/useIsMobile'
 import LazyVideo from '../ui/LazyVideo'
@@ -44,7 +44,7 @@ function frameStyle(opacity) {
   return { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity, transition: 'opacity 0.4s ease', pointerEvents: 'none' }
 }
 
-function WorkCard({ project }) {
+function WorkCard({ project, load }) {
   const [hover, setHover] = useState(false)
   return (
     <Link
@@ -54,7 +54,7 @@ function WorkCard({ project }) {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <LazyVideo src={videoSrc(project.video)} poster={posterSrc(project.video)} style={frameStyle(hover ? 1 : 0.65)} />
+      <LazyVideo load={load} src={videoSrc(project.video)} poster={posterSrc(project.video)} style={frameStyle(hover ? 1 : 0.65)} />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)' }} />
       <div className="absolute inset-0 flex items-center justify-center" style={{ opacity: hover ? 1 : 0, transition: 'opacity 0.3s ease' }}>
         <div style={{ width: '48px', height: '48px', borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -82,7 +82,7 @@ function WorkCard({ project }) {
 function MobileWorkCard({ project }) {
   return (
     <Link to={`/work/${project.id}`} className="relative overflow-hidden block" style={{ aspectRatio: '16/9', borderRadius: '4px', textDecoration: 'none' }}>
-      <LazyVideo src={videoSrc(project.video)} poster={posterSrc(project.video)} style={frameStyle(0.75)} />
+      <LazyVideo rootMargin="1200px" src={videoSrc(project.video)} poster={posterSrc(project.video)} style={frameStyle(0.75)} />
       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)' }} />
       <div className="absolute bottom-0 left-0 right-0 p-2">
         <h3 style={{ fontFamily: "'EB Garamond', Georgia, serif", fontSize: 'clamp(11px, 3vw, 16px)', fontWeight: 700, color: '#F2E4C2', lineHeight: 1.1 }}>
@@ -99,6 +99,9 @@ function DesktopWorkSection() {
   const railRef = useRef(null)
   // How far the rail must travel so the last card ends flush with the viewport edge.
   const [distance, setDistance] = useState(0)
+  // Cards further along the rail are clipped, so the viewport check cannot see them:
+  // start loading every clip as the section approaches, ready to play when it slides in.
+  const near = useInView(ref, { once: true, margin: '1200px' })
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   const x = useTransform(scrollYProgress, [0, 1], [0, -distance])
 
@@ -119,7 +122,7 @@ function DesktopWorkSection() {
         <div className="overflow-hidden">
           <motion.div ref={railRef} className="flex" style={{ x, gap: '16px', paddingLeft: 'clamp(24px, 5vw, 80px)', paddingRight: '80px' }}>
             {HOME_WORK.map((project) => (
-              <WorkCard key={project.id} project={project} />
+              <WorkCard key={project.id} project={project} load={near} />
             ))}
           </motion.div>
         </div>

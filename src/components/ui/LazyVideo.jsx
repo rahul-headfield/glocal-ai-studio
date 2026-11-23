@@ -9,10 +9,13 @@ const REDUCED_MOTION = typeof window !== 'undefined' && window.matchMedia?.('(pr
  * stay on their poster when the visitor prefers reduced motion.
  * `persistent` loops never pause: they load early and are resumed if the
  * browser stops them, for clips that are transformed by scroll effects.
+ * `load` attaches the source straight away, for clips a parent knows are about
+ * to be shown but that the viewport check cannot see (e.g. clipped in a rail).
  */
-export default function LazyVideo({ src, poster, controls = false, persistent = false, rootMargin = persistent ? '1200px' : '400px', style, className, title, ...rest }) {
+export default function LazyVideo({ src, poster, controls = false, persistent = false, load = false, rootMargin = persistent ? '1200px' : '400px', style, className, title, ...rest }) {
   const ref = useRef(null)
-  const [active, setActive] = useState(false)
+  const [near, setNear] = useState(false)
+  const active = near || load
   const autoplay = !controls && !REDUCED_MOTION
 
   useEffect(() => {
@@ -21,7 +24,7 @@ export default function LazyVideo({ src, poster, controls = false, persistent = 
     const loader = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setActive(true)
+          setNear(true)
           loader.disconnect()
         }
       },
@@ -34,26 +37,32 @@ export default function LazyVideo({ src, poster, controls = false, persistent = 
   useEffect(() => {
     const el = ref.current
     if (!el || !active || !autoplay) return undefined
-    if (persistent) {
-      const resume = () => {
-        if (el.paused && !document.hidden) el.play().catch(() => {})
-      }
-      resume()
-      el.addEventListener('pause', resume)
-      el.addEventListener('canplay', resume)
-      document.addEventListener('visibilitychange', resume)
-      return () => {
-        el.removeEventListener('pause', resume)
-        el.removeEventListener('canplay', resume)
-        document.removeEventListener('visibilitychange', resume)
-      }
+    // Persistent loops always count as on screen; the rest follow the viewport.
+    let onScreen = persistent
+    // A play() can be refused or dropped (still buffering, tab in the background,
+    // the browser pausing it), so it is retried whenever the clip could run.
+    const resume = () => {
+      if (onScreen && el.paused && !document.hidden) el.play().catch(() => {})
     }
-    const player = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) el.play().catch(() => {})
-      else el.pause()
-    })
-    player.observe(el)
-    return () => player.disconnect()
+    const events = ['pause', 'canplay', 'loadeddata']
+    events.forEach((name) => el.addEventListener(name, resume))
+    document.addEventListener('visibilitychange', resume)
+    let player
+    if (persistent) {
+      resume()
+    } else {
+      player = new IntersectionObserver(([entry]) => {
+        onScreen = entry.isIntersecting
+        if (onScreen) resume()
+        else el.pause()
+      })
+      player.observe(el)
+    }
+    return () => {
+      player?.disconnect()
+      events.forEach((name) => el.removeEventListener(name, resume))
+      document.removeEventListener('visibilitychange', resume)
+    }
   }, [active, autoplay, persistent])
 
   return (

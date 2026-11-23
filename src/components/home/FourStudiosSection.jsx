@@ -118,6 +118,7 @@ function PillarCard({ service, index, isMobile }) {
           <LazyVideo
             src={videoSrc(service.video)}
             poster={posterSrc(service.video)}
+            rootMargin="1600px"
             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
           />
         </div>
