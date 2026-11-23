@@ -3,23 +3,26 @@ import { motion, useInView } from 'framer-motion'
 import CalendlyLink from '../ui/CalendlyLink'
 import EmailLink from '../ui/EmailLink'
 import { EASE } from '../../lib/motion'
+import useIsMobile from '../../lib/useIsMobile'
 
 /** Cream "Get in Touch." closing block on the homepage. */
 export default function GetInTouchSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+  const isMobile = useIsMobile()
 
   return (
     <section
       ref={ref}
       style={{
         backgroundColor: '#F5F4F0',
-        minHeight: '100vh',
+        // Phones: hug the content instead of filling the whole screen.
+        minHeight: isMobile ? undefined : '100vh',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 'clamp(48px, 6vh, 80px) clamp(32px, 6vw, 96px)',
+        padding: isMobile ? '64px 24px' : 'clamp(48px, 6vh, 80px) clamp(32px, 6vw, 96px)',
         textAlign: 'center',
         position: 'relative',
         overflow: 'hidden',
@@ -71,7 +74,7 @@ export default function GetInTouchSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.32, ease: EASE }}
-          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 'clamp(14px, 2.5vw, 17px)', fontWeight: 300, color: 'rgba(59,42,18,0.75)', lineHeight: 1.7, maxWidth: '440px', margin: '0 auto 56px' }}
+          style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 'clamp(14px, 2.5vw, 17px)', fontWeight: 300, color: 'rgba(59,42,18,0.75)', lineHeight: 1.7, maxWidth: '440px', margin: isMobile ? '0 auto 36px' : '0 auto 56px' }}
         >
           Brief us on your project and we'll come back with ideas within 24 hours.
         </motion.p>

@@ -11,9 +11,11 @@ function PillarCard({ service, index, isMobile }) {
   return (
     <div
       style={{
-        position: 'sticky',
+        // Phones: plain stacked blocks (copy, then clip). The sticky full-screen
+        // stack leaves black bands there because a card is shorter than the screen.
+        position: isMobile ? 'relative' : 'sticky',
         top: 0,
-        minHeight: '100vh',
+        minHeight: isMobile ? undefined : '100vh',
         height: isMobile ? 'auto' : '100vh',
         zIndex: index + 1,
         backgroundColor: '#080808',
@@ -182,7 +184,7 @@ export default function FourStudiosSection() {
         {PILLARS.map((service, i) => (
           <PillarCard key={service.id} service={service} index={i} isMobile={isMobile} />
         ))}
-        <div style={{ height: '20vh', backgroundColor: '#080808' }} />
+        {!isMobile && <div style={{ height: '20vh', backgroundColor: '#080808' }} />}
       </div>
     </section>
   )
