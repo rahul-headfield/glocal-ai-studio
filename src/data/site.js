@@ -37,8 +37,8 @@ export const NAV_LINKS = [
 export const MENU_LINKS = [...NAV_LINKS, { label: 'Contact', href: '/contact' }]
 
 export const SOCIALS = [
-  { label: 'Instagram', icon: 'IG', href: 'https://www.instagram.com/glocalrpo_us/' },
-  { label: 'LinkedIn', icon: 'in', href: 'https://www.linkedin.com/company/glocalrpo' },
+  { label: 'Instagram', icon: 'IG', href: 'https://www.instagram.com/glocal_edit/' },
+  { label: 'LinkedIn', icon: 'in', href: 'https://www.linkedin.com/company/glocal-edits' },
 ]
 
 export const FOOTER_NAVIGATE = [
