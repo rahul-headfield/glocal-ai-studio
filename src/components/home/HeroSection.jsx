@@ -8,7 +8,7 @@ import { videoSrc } from '../../lib/media'
 import { SITE_TAGLINE } from '../../data/site'
 
 /** First-paint frame of the hero clip (also the LCP image). */
-const POSTER = '/posters/final-shot-1-1920.webp'
+const POSTER = '/posters/showreel-v4-1920.webp'
 
 const REDUCED_MOTION = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
@@ -43,9 +43,9 @@ const EASE = [0.4, 0, 0.2, 1]
 export default function HeroSection() {
   const isMobile = useIsMobile()
   // Phones get the 720p muted rendition; everything else the 1080p muted hero cut.
-  const src = videoSrc('final-shot-1', isMobile ? '720' : 'hero')
+  const src = videoSrc('showreel-v4', isMobile ? '720' : 'hero')
   // Once the video is actually rendering frames, drop the poster underneath it.
-  // The video sits at 85% opacity, so leaving the poster (the GLOCAL logo card)
+  // The video sits at 85% opacity, so leaving the poster
   // behind it bleeds a faint watermark through the footage.
   const [playing, setPlaying] = useState(false)
 
