@@ -80,9 +80,12 @@ export default function WorkProject() {
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(0,0,0,0.3) 0%, transparent 60%)' }} />
         </div>
         <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 'clamp(80px, 8vw, 120px) clamp(28px, 6vw, 72px) clamp(48px, 6vh, 72px)' }}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, ease: EASE }} style={{ marginBottom: '32px' }}>
-            <img src={WORDMARK} alt={SITE_NAME} width={800} height={202} decoding="async" style={{ height: '26px', width: 'auto', opacity: 0.85 }} />
-          </motion.div>
+          {/* The studio's own work is already labelled by the client line and the navbar logo. */}
+          {project.client !== SITE_NAME && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, ease: EASE }} style={{ marginBottom: '32px' }}>
+              <img src={WORDMARK} alt={SITE_NAME} width={800} height={202} decoding="async" style={{ height: '26px', width: 'auto', opacity: 0.85 }} />
+            </motion.div>
+          )}
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '48px', flexWrap: 'wrap' }}>
             <div style={{ maxWidth: '700px', flex: '1 1 400px' }}>
               <motion.h1

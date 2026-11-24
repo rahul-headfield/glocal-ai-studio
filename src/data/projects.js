@@ -11,7 +11,8 @@ export const PROJECTS = [
     category: 'Showreel',
     year: '2026',
     poster: '/posters/showreel.webp',
-    heroPoster: '/posters/showreel-hero.webp',
+    // A frame from the reel, not its logo end card: the navbar already carries the logo.
+    heroPoster: '/posters/surreal-vfx-hero.webp',
     tags: ['Showreel', '11 Categories', 'Sound On'],
     brief:
       'Seventy-two seconds across eleven categories: automotive, product, fashion, food and beverage, architecture, cinematic worlds, surreal VFX, experiential visuals, brand films, storytelling and animation. Every frame AI-native.',
